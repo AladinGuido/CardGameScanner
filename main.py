@@ -1,11 +1,10 @@
 import copy
-from urllib import request
-import webbrowser
 import cv2
-import numpy as np
 import imageproc
+import dbhelper
 
 CAMERA_URI = "http://192.168.1.238:4747/video"#?1920x1080"
+DB_PATH = "database/playing_cards.db"
 
 
 def main():
@@ -38,6 +37,30 @@ def main():
             cv2.destroyAllWindows()
             break
 
+def fill_card_array(db_path, card_game_name):
+    try:
+        db_helper = dbhelper.DBHelper(db_path)
+        result_card_game = db_helper.query(f"SELECT * FROM card_game WHERE name = '{card_game_name}';")
+        if len(result_card_game) != 0:
+            card_game_id = result_card_game[0][0]
+            cards = db_helper.query(f"SELECT * FROM cards WHERE card_game = '{card_game_id}'")
+            print(cards)
+        else:
+            print("No cardgame found")
+    except Exception as e:
+        print("An error occured!")
+        print(type(e))
 
 if __name__ == "__main__":
-    main()
+    #main()
+    fill_card_array(DB_PATH, "Frantic")
+
+    #
+    # CARD_GAME_ID = result[0][0]
+    # result
+    # np_array = np.frombuffer(result[0][3], np.uint8)
+    # image = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
+    # cv2.imshow('Image', image)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
+    # print(result[0])
