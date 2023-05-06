@@ -21,8 +21,8 @@ class ImageProcessing:
         self.KERNEL_SIZE = np.ones((5, 5))
         self.THRESHOLD_ADD = 100
         self.MIN_AREA_SIZE = 5000
-        self.CARD_HEIGHT = int(1028*0.75)
-        self.CARD_WIDTH = int(661*0.75)
+        self.CARD_HEIGHT = 1028
+        self.CARD_WIDTH = 661
 
     def pre_process_image(self, image):
         image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
