@@ -17,12 +17,13 @@ def get_coordinate_diff(c1, c2):
 
 class ImageProcessing:
 
-    def __init__(self):
+    def __init__(self, card_width, card_height):
         self.KERNEL_SIZE = np.ones((5, 5))
         self.THRESHOLD_ADD = 100
         self.MIN_AREA_SIZE = 5000
-        self.CARD_HEIGHT = 1028
-        self.CARD_WIDTH = 661
+        self.CARD_WIDTH = card_width
+        self.CARD_HEIGHT = card_height
+
 
     def pre_process_image(self, image):
         image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)

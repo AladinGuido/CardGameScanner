@@ -6,11 +6,10 @@ import dbhelper
 import playingcard
 
 CAMERA_URI = "http://192.168.1.238:4747/video"  # ?1920x1080"
-DB_PATH = "database/playing_cards.db"
+DB_PATH = "database/playing_cards_old.db"
 
-
-def main(card_list):
-    image_processing = imageproc.ImageProcessing()
+def main(card_width, card_height, card_list):
+    image_processing = imageproc.ImageProcessing(card_width, card_height)
 
     capture = cv2.VideoCapture(CAMERA_URI)
     while (True):
@@ -47,12 +46,18 @@ def main(card_list):
 
 
 def fill_card_array(db_path, card_game_name):
+    card_width = -1
+    card_height = -1
     card_list = []
     try:
         db_helper = dbhelper.DBHelper(db_path)
         result_card_game = db_helper.query(f"SELECT * FROM card_game WHERE name = '{card_game_name}';")
+        print(result_card_game)
         if len(result_card_game) != 0:
+
             card_game_id = result_card_game[0][0]
+            card_width = result_card_game[0][3]
+            card_height = result_card_game[0][4]
             cards = db_helper.query(f"SELECT * FROM cards WHERE card_game = '{card_game_id}'")
 
             for card in cards:
@@ -71,10 +76,13 @@ def fill_card_array(db_path, card_game_name):
         print("An error occured!")
         print(type(e))
 
-    return card_list
+    return card_width, card_height, card_list
 
 
 if __name__ == "__main__":
-    card_list = fill_card_array(DB_PATH, "Frantic")
-    main(card_list)
+    #card_width, card_height, card_list = fill_card_array(DB_PATH, "Frantic")
+    #main(card_width, card_height, card_list)
+    db = dbhelper.DBHelper(DB_PATH)
+    result = db.query("SELECT * FROM card_game;")
+    print(result)
 
