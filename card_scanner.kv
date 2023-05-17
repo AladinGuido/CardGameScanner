@@ -1,0 +1,22 @@
+BoxLayout:
+    orientation: 'horizontal'
+    BoxLayout:
+        id: image_display
+
+    BoxLayout:
+        size_hint_x: 1.5
+        orientation: 'vertical'
+        TextInput:
+            id: text_input_effect
+            multiline: True
+            readonly: True
+            font_size: 36
+            text: ''
+
+        Button:
+            size_hint_y: 0.25
+            id: button_scan_card
+            background_color: (46 / 255), (163 / 255), 0
+            text: 'Scan Card'
+            font_size: 50
+            on_press: app.handle_scan_button()

@@ -3,6 +3,7 @@ import copy
 import cv2
 import numpy as np
 
+
 def get_coordinate_diff(c1, c2):
     x1 = c1[0]
     y1 = c1[1]
@@ -10,10 +11,11 @@ def get_coordinate_diff(c1, c2):
     x2 = c2[0]
     y2 = c2[1]
 
-    x_diff_squared = (x1 - x2)**2
-    y_diff_squared = (y1 - y2)**2
-    distance = (x_diff_squared + y_diff_squared)**(1/2)
+    x_diff_squared = (x1 - x2) ** 2
+    y_diff_squared = (y1 - y2) ** 2
+    distance = (x_diff_squared + y_diff_squared) ** (1 / 2)
     return distance
+
 
 class ImageProcessing:
 
@@ -23,7 +25,6 @@ class ImageProcessing:
         self.MIN_AREA_SIZE = 5000
         self.CARD_WIDTH = card_width
         self.CARD_HEIGHT = card_height
-
 
     def pre_process_image(self, image):
         image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -54,14 +55,13 @@ class ImageProcessing:
             box = cv2.boxPoints(rect)
             box = np.int0(box)
             return approximation, box
-        return []
+        return [],[]
 
     def reorder_corners(self, corners):
         ordered_points = np.zeros((4, 1, 2), np.int32)
         corner_points_sum = corners.sum(1)
 
         ordered_points[0] = corners[np.argmin(corner_points_sum)]
-
 
         diff_dictionary = {}
         for point in corners:
@@ -70,15 +70,14 @@ class ImageProcessing:
                 diff_dictionary[coordinate_diff] = point
 
         for i, key in enumerate(sorted(diff_dictionary.keys())):
-            ordered_points[(i+1)] = diff_dictionary.get(key)
-
+            ordered_points[(i + 1)] = diff_dictionary.get(key)
 
         return ordered_points
 
     def warp_image(self, image, corners):
         source_points = np.float32(corners)
-        destination_points = np.float32([[0, 0], [self.CARD_WIDTH, 0], [0, self.CARD_HEIGHT], [self.CARD_WIDTH, self.CARD_HEIGHT]])
+        destination_points = np.float32(
+            [[0, 0], [self.CARD_WIDTH, 0], [0, self.CARD_HEIGHT], [self.CARD_WIDTH, self.CARD_HEIGHT]])
         perspective_matrix = cv2.getPerspectiveTransform(source_points, destination_points)
         warped_image = cv2.warpPerspective(image, perspective_matrix, (self.CARD_WIDTH, self.CARD_HEIGHT))
         return warped_image
-
